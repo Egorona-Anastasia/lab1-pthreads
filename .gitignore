@@ -1,0 +1,10 @@
+*.o
+*.out
+*.a
+*.csv
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+*.log
