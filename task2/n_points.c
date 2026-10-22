@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
+#include "../task1/timer.h"
 
 #define G 6.67430e-11
 #define STEPS 1000
@@ -125,6 +126,9 @@ int main(int argc, char* argv[]) {
     struct Force* local_forces = calloc((size_t)thread_count * n, sizeof(struct Force));
     struct Force* forces = calloc((size_t)n, sizeof(struct Force));
 
+    double start, end;
+    double total_time = 0.0;
+
     FILE* out = fopen("n_points.csv", "w");
 
     if (out == NULL) {
@@ -150,6 +154,7 @@ int main(int argc, char* argv[]) {
 
     double dt = tend / STEPS;
     for (int step = 1; step <= STEPS; ++step) {
+        GET_TIME(start);
         for (int t = 0; t < thread_count; ++t) {
             struct Force* my_forces = local_forces + (size_t)t * n;
 
@@ -211,12 +216,16 @@ int main(int argc, char* argv[]) {
             points[i].vz += forces[i].z / points[i].mass * dt;
         }
 
+        GET_TIME(end);
+        total_time += end - start;
+
         fprintf(out, "%.10e", step * dt);
         for (int i = 0; i < n; ++i) {
             fprintf(out, ",%.10e,%.10e", points[i].x, points[i].y);
         }
         fprintf(out, "\n");
     }
+    printf("Время вычислений: %.6f секунд\n", total_time);
 
     fclose(out);
     free(points);
