@@ -76,11 +76,11 @@ int my_unlock(my_rwlock_t* lock) {
     pthread_mutex_unlock(&lock->mutex);
     return 0;
 }
-"""
+/*
                                                         !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 нельзя вызывать, пока блокировка используется хоть кем то
 -> вызываем после завершения всех потоков
-"""
+*/
 
 int my_rwlock_destroy(my_rwlock_t* lock) {
     int err = 0;
